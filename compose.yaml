@@ -1,0 +1,15 @@
+services:
+  # spin up react
+  frontend:
+    build: ./frontend
+    container_name: staysafe_front
+    ports:
+      - '3000:3000'
+  # spin up node
+  backend:
+    build: ./backend
+    container_name: staysafe_back
+    ports:
+      - '8080:8080'
+
+# MongoDB to be added later
