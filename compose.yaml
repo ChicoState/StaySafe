@@ -2,14 +2,18 @@ services:
   # spin up react
   frontend:
     build: ./frontend
-    container_name: staysafe_front
+    container_name: staysafe_fe
     ports:
       - '3000:3000'
+    volumes:
+      - ./frontend:/usr/src
   # spin up node
   backend:
     build: ./backend
-    container_name: staysafe_back
+    container_name: staysafe_be
     ports:
       - '8080:8080'
+    volumes:
+      - ./backend:/usr/src
 
 # MongoDB to be added later
