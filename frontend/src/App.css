@@ -1,3 +1,31 @@
+.top-navbar {
+  background-color: #3D4040;
+  overflow: hidden;
+}
+
+.top-navbar a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 1em;
+  text-decoration: none;
+  font-size: 110%;
+}
+
+.top-navbar a:hover:not(.site-nav-title) {
+  background-color: #f2f2f2;
+  color: black;
+}
+
+.top-navbar a.site-nav-title {
+  color: cyan;
+  float: left;
+  font-size: 110%;
+  font-weight: bold;
+}
+
+/* CSS for default splash page leaving as reference for now - remove later
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -40,3 +68,4 @@
 .read-the-docs {
   color: #888;
 }
+*/
