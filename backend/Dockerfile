@@ -1,7 +1,7 @@
 # Node backend setup
 FROM node:22
 
-WORKDIR /staysafe
+WORKDIR /usr/src
 # Copy package requirements and install
 COPY package*.json .
 RUN npm install
