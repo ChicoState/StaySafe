@@ -1,11 +1,12 @@
 # React frontend setup
 FROM node:22
 
-WORKDIR /usr/src
+WORKDIR /usr/app
 # Copy package requirements and install
-COPY package*.json .
+COPY package.json .
 RUN npm install
 # Copy current directory items over
+COPY . .
 EXPOSE 3000
 # Start react app
-CMD ["npm", "start"]
+CMD ["npm", "run", "dev"]

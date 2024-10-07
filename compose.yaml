@@ -6,8 +6,8 @@ services:
     ports:
       - '3000:3000'
     volumes:
-      - ./frontend:/usr/src
-      - /usr/src/node_modules
+      - ./frontend:/usr/app
+      - /usr/app/node_modules
   # spin up node
   backend:
     build: ./backend
