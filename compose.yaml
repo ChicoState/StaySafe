@@ -7,7 +7,6 @@ services:
       - '3000:3000'
     volumes:
       - ./frontend:/usr/app
-      - /usr/app/node_modules
   # spin up node
   backend:
     build: ./backend
@@ -16,6 +15,5 @@ services:
       - '8080:8080'
     volumes:
       - ./backend:/usr/src
-      - /usr/src/node_modules
 
 # MongoDB to be added later

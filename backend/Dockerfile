@@ -6,7 +6,7 @@ WORKDIR /usr/src
 COPY package.json .
 RUN npm install
 # Copy current directory items over
-COPY . .
+COPY index.js .
 EXPOSE 8080
 # Run index.js
 CMD ["node", "index.js"]
