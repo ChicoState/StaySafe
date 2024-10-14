@@ -24,6 +24,10 @@
   font-weight: bold;
 }
 
+.top-navbar-right {
+  float: right;
+}
+
 /* CSS for default splash page leaving as reference for now - remove later
 
 .logo {
