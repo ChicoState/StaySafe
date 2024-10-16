@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");   // Package for handling CORS security
-const app = express()
+const app = express();
 const hostname = "localhost";
 const port = 8080;
 

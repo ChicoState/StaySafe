@@ -6,7 +6,9 @@ WORKDIR /usr/app
 COPY package.json .
 RUN npm install
 # Copy current directory items over
-COPY . .
+COPY public .
+COPY src .
+COPY *.js .
 EXPOSE 3000
 # Start react app
 CMD ["npm", "run", "dev"]
