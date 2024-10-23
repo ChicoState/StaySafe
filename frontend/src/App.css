@@ -1,15 +1,24 @@
+/* General Styling */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+/* Top Navigation Bar */
 .top-navbar {
   background-color: #3D4040;
   overflow: hidden;
+  padding: 0.5em 0; /* Reduced padding for smaller top bar */
 }
 
 .top-navbar a {
   float: left;
   color: #f2f2f2;
   text-align: center;
-  padding: 1em;
+  padding: 0.5em 1em; /* Reduced padding inside links */
   text-decoration: none;
-  font-size: 110%;
+  font-size: 90%; /* Reduced font size for smaller appearance */
 }
 
 .top-navbar a:hover:not(.site-nav-title) {
@@ -28,17 +37,120 @@
   float: right;
 }
 
-/* CSS for default splash page leaving as reference for now - remove later
+/* Map Container Styling (for reference, adjust if needed) */
+.map-container {
+  position: relative;
+  width: 100vw;
+  height: calc(100vh - 50px); /* Adjust height relative to the smaller top bar */
+}
 
+/* Auth Form (Login/Registration) Container Styling */
+.auth-form-container {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 1.5rem; /* Reduce padding */
+  border-radius: 15px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+  max-width: 350px; /* Consistent size */
+  width: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.auth-form-container h2 {
+  margin-bottom: 1rem;
+  font-size: 1.8rem;
+}
+
+.auth-form-container form {
+  display: flex;
+  flex-direction: column;
+  width: 100%; /* Ensure form takes full width */
+}
+
+/* Form Input Fields */
+input {
+  margin: 0.5rem 0;
+  padding: 0.75rem; /* Reduced padding for smaller input fields */
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem; /* Slightly smaller font size */
+  background-color: white;
+  color: #333;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+input:focus {
+  outline: none;
+  box-shadow: 0 0 8px rgba(116, 57, 219, 0.8);
+}
+
+/* Label Styling */
+label {
+  text-align: left;
+  padding: 0.25rem 0;
+  font-size: 1rem;
+}
+
+/* Button Styling */
+button {
+  border: none;
+  background-color: white;
+  padding: 0.75rem;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #7439db;
+  font-weight: bold;
+  margin-top: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #f2f2f2;
+}
+
+.link-btn {
+  background: none;
+  color: white;
+  text-decoration: underline;
+  margin-top: 1rem;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+}
+
+.link-btn:hover {
+  text-decoration: underline;
+  color: #ddd;
+}
+
+/* Media Query for Larger Screens */
+@media screen and (min-width: 600px) {
+  .auth-form-container {
+    padding: 3rem;
+    border: 1px solid white;
+    border-radius: 10px;
+    margin: 1rem;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Optional: Hide default splash logo styles (Can remove later) */
 .logo {
   height: 6em;
   padding: 1.5em;
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
@@ -52,17 +164,4 @@
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
 
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
-*/
