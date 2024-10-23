@@ -33,6 +33,7 @@ function Layout({ currentForm, onFormSwitch }) {
                 {/* Removed the Register button from the top bar */}
                 <div className="top-navbar-right">
                     <a href="/login" onClick={() => onFormSwitch('login')}>Login</a>
+                    <a href="/register" onClick={() => onFormSwitch('register')}>Register</a>
                 </div>
             </nav>
             <hr />
