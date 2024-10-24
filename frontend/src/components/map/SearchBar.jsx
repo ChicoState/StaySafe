@@ -5,9 +5,7 @@ import { useMap } from '@vis.gl/react-google-maps';
 const SearchBar = () => {
     const map = useMap();
     const [searchValue, setSearchValue] = useState('');
-    const [autocompleteResults, setAutocompleteResults] = useState([]);
 
-    // Initialize autocomplete when component mounts
     const initializeAutocomplete = (input) => {
         if (!input || !window.google) return;
 

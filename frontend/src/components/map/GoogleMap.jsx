@@ -25,7 +25,7 @@ function GoogleMap() {
             apiKey={GMAPS_API_KEY}
             libraries={['places']}
         >
-            {/* SearchBar is now outside the hoverable container */}
+            
             <div style={{ 
                 width: '80%', 
                 margin: '0 auto',
@@ -40,13 +40,12 @@ function GoogleMap() {
                     margin: 0,
                     fontSize: '24px',
                     color: 'red',
-                    whiteSpace: 'nowrap'  // Prevents text from wrapping
+                    whiteSpace: 'nowrap' 
                 }}> Find Crime near you, StaySafe!
                     </h2>
                 <SearchBar />
             </div>
 
-            {/* Map container with hover effects */}
             <div 
                 style={containerStyle}
                 onMouseEnter={() => setIsHovered(true)}
