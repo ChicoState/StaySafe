@@ -27,7 +27,7 @@ body {
 }
 
 .top-navbar a.site-nav-title {
-  color: cyan;
+  color: red;
   float: left;
   font-size: 110%;
   font-weight: bold;
@@ -139,6 +139,11 @@ button:hover {
   }
 }
 
+
+
+
+
+
 /* Optional: Hide default splash logo styles (Can remove later) */
 .logo {
   height: 6em;
@@ -163,5 +168,6 @@ button:hover {
     transform: rotate(360deg);
   }
 }
+
 
 
