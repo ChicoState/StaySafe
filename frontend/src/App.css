@@ -9,16 +9,15 @@ body {
 .top-navbar {
   background-color: #3D4040;
   overflow: hidden;
-  padding: 0.5em 0; /* Reduced padding for smaller top bar */
 }
 
 .top-navbar a {
   float: left;
   color: #f2f2f2;
   text-align: center;
-  padding: 0.5em 1em; /* Reduced padding inside links */
+  padding: 0.8em;
   text-decoration: none;
-  font-size: 90%; /* Reduced font size for smaller appearance */
+  font-size: 105%;
 }
 
 .top-navbar a:hover:not(.site-nav-title) {
@@ -29,7 +28,7 @@ body {
 .top-navbar a.site-nav-title {
   color: red;
   float: left;
-  font-size: 110%;
+  font-size: 105%;
   font-weight: bold;
 }
 
