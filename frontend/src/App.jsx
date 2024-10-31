@@ -7,7 +7,6 @@ import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 import CrimeDetail from './components/crime/CrimeDetail';
 
-
 function App() {
   return (
     <div>
