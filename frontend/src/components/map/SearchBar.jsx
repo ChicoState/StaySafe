@@ -1,6 +1,7 @@
 // src/components/map/SearchBar.jsx
 import { useState } from 'react';
 import { useMap } from '@vis.gl/react-google-maps';
+import axios from 'axios';
 
 const SearchBar = () => {
   const map = useMap();
@@ -11,8 +12,8 @@ const SearchBar = () => {
 
     const autocomplete = new window.google.maps.places.Autocomplete(input, {
       types: ['geocode', 'establishment'],
-      fields: ['formatted_address', 'geometry', 'name'],
-    });
+      fields: ['formatted_address', 'geometry', 'name', 'address_components'],
+    });   
 
     // When a place is selected
     autocomplete.addListener('place_changed', () => {
@@ -24,8 +25,48 @@ const SearchBar = () => {
         map.panTo(place.geometry.location);
         map.setZoom(15);
       }
+
+      const addressComponents = place.address_components;
+      let location = '';
+      let state = '';
+      let county = '';
+  
+      addressComponents.forEach((component) => {
+        if (component.types.includes('locality')) {
+          location = component.long_name;
+        } 
+        else if (component.types.includes('administrative_area_level_1')) {
+          state = component.short_name;
+        } 
+        else if (component.types.includes('administrative_area_level_2')) {
+          county = component.long_name;
+        }
+      });
+
       setSearchValue(place.formatted_address);
+      postSearch(location, state, county)
     });
+  };
+
+  const postSearch = async (location, state, county) => {
+    try {
+      const response = await axios.post('http://localhost:8080/api/search', {
+        location,
+        state,
+        county,
+      }, 
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      // Log or process the response data
+      console.log('Server response:', response.data);
+    } 
+    catch (error) {
+      console.error('Error posting data to backend:', error);
+    }
   };
 
   return (
