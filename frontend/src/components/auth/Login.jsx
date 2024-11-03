@@ -17,7 +17,7 @@ const Login = () => {
       });
 
       if (response.data.success) {
-        alert("Login successful");
+        alert("Login successful!");
         setIsLoggedIn(true);
       }
     } catch (error) {
@@ -39,7 +39,7 @@ const Login = () => {
 
   const handleLogout = () => {
     setIsLoggedIn(false);
-    alert("Logout successful");
+    alert("Logout successful!");
   };
 
   return (
