@@ -34,10 +34,10 @@ const CrimeFilters = ({ onFilterChange }) => {
           onClick={() => handleFilterClick(filter)}
           style={{
             padding: '8px 16px',
-            border: '2px solid red',
+            border: '2px solid #17c0ea',
             borderRadius: '4px',
-            backgroundColor: selectedFilters.includes(filter) ? 'red' : 'transparent',
-            color: selectedFilters.includes(filter) ? 'white' : 'red',
+            backgroundColor: selectedFilters.includes(filter) ? '#17c0ea' : 'transparent',
+            color: selectedFilters.includes(filter) ? 'white' : '#17c0ea',
             cursor: 'pointer',
             transition: 'all 0.3s ease'
           }}

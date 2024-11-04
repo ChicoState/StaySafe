@@ -90,7 +90,7 @@ const SearchBar = () => {
           width: '100%',
           padding: '12px',
           borderRadius: '4px',
-          border: '2px solid red',
+          border: '2px solid #17c0ea',
           boxShadow: '0 2px 6px rgba(0,0,0,0.3)',
           fontSize: '14px',
         }}

@@ -14,10 +14,11 @@ function GoogleMap() {
     margin: '0 auto',
     marginTop: 10,
     backgroundColor: 'white',
-    border: '5px solid red',
+    border: '5px solid #737373',
+    borderRadius: '5px',
     transition: 'all 0.3s ease',
     transform: isHovered ? 'scale(1.01)' : 'scale(1)',
-    boxShadow: isHovered ? '0 0 20px rgba(255,0,0,0.3)' : 'none'
+    boxShadow: isHovered ? '0 0 20px rgba(81,231,255,0.3)' : 'none'
   };
 
   useEffect(() => {
@@ -49,9 +50,9 @@ function GoogleMap() {
         <h2 style={{
           margin: 0,
           fontSize: '24px',
-          color: 'red',
+          color: '#17c0ea',
           whiteSpace: 'nowrap'
-        }}> Find Crime near you, StaySafe!
+        }}> Find Crime near you – StaySafe!
         </h2>
         {isAPILoaded && <SearchBar />}
       </div>

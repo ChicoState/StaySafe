@@ -7,7 +7,7 @@ body {
 
 /* Top Navigation Bar */
 .top-navbar {
-  background-color: #3D4040;
+  background-color: #424646;
   overflow: hidden;
 }
 
@@ -26,7 +26,7 @@ body {
 }
 
 .top-navbar a.site-nav-title {
-  color: red;
+  color: #17c0ea;
   float: left;
   font-size: 105%;
   font-weight: bold;
