@@ -18,7 +18,7 @@ const Register = () => {
       });
 
       if (response.data.success) {
-        alert("Registration successful");
+        alert("Registration successful.");
         navigate('/login'); // Switch to login after successful registration
       } else {
         alert("User already exists or registration failed");

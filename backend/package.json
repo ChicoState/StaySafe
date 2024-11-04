@@ -21,12 +21,14 @@
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
-    "express": "^4.21.0",
+    "express": "^4.21.1",
+    "express-validator": "^7.0.0",
     "jsonwebtoken": "^9.0.0",
-    "express-validator": "^7.0.0"
-
+    "mongodb": "^6.10.0",
+    "mongoose": "^8.7.3"
   },
   "devDependencies": {
     "nodemon": "3.0.0"
-  }
+  },
+  "type": "module"
 }
