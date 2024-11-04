@@ -14,7 +14,7 @@ function GoogleMap() {
     margin: '0 auto',
     marginTop: 10,
     backgroundColor: 'white',
-    border: '5px solid #737373',
+    border: '4px solid #767575',
     borderRadius: '5px',
     transition: 'all 0.3s ease',
     transform: isHovered ? 'scale(1.01)' : 'scale(1)',
