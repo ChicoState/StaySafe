@@ -53,7 +53,7 @@ app.get('/api/fetch-info', async (req, res) => {
 });
 
 async function getOri(state, county, location) {
-  let url = `https://api.usa.gov/crime/fbi/cde/agency/byStateAbbr/CA?API_KEY=${fbiAPIKey}`;
+  let url = `https://api.usa.gov/crime/fbi/cde/agency/byStateAbbr/${state}?API_KEY=${fbiAPIKey}`;
   try {
     const response = await axios.get(url);
     const agencyData = response.data[county.toUpperCase()];
