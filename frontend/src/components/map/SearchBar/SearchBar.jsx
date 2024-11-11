@@ -1,8 +1,7 @@
-// src/components/map/SearchBar.jsx
 import { useState } from 'react';
 import { useMap } from '@vis.gl/react-google-maps';
 
-const SearchBar = () => {
+const SearchBar = ({ setMapCenter }) => { // Accept setMapCenter as a prop
   const map = useMap();
   const [searchValue, setSearchValue] = useState('');
 
@@ -24,7 +23,14 @@ const SearchBar = () => {
         map.panTo(place.geometry.location);
         map.setZoom(15);
       }
+
       setSearchValue(place.formatted_address);
+
+      // Update map center in the parent component
+      setMapCenter({
+        lat: place.geometry.location.lat(),
+        lng: place.geometry.location.lng(),
+      });
     });
   };
 
@@ -37,7 +43,6 @@ const SearchBar = () => {
       zIndex: 1000,
       width: '90%',
       maxWidth: '400px',
-
     }}>
       <input
         type="text"
