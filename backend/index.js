@@ -7,32 +7,13 @@ import bodyParser from "body-parser";
 import bcrypt from "bcrypt";
 
 dotenv.config();
+connectToDatabase();
 
 const app = express();
 const hostname = "localhost";
 const port = 8080;
 const fbiAPIKey = process.env.fbiAPIKey
 const { Schema } = mongoose;
-
-/* const locationORISchema = new Schema({
-  location: {
-    type: String,
-    required: true,
-  },
-  county: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  state: {
-    type: String,
-    required: true,
-  },
-  ori: {
-    type: String,
-    required: true,
-  }
-}); */
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -73,7 +54,6 @@ app.get('/api/fbi/crime-stats', async (req, res) => {
     let state = lastSearch.state;
     let location = lastSearch.location;
     let ori_code = await getOri(state, county, location);
-    let crime_type = "property-crime";
     let year = "2023";
     let from_date = `01-${year}`;
     let to_date = `12-${year}`;
@@ -125,8 +105,6 @@ async function connectToDatabase() {
     console.error("Error connecting to MongoDB:", error);
   }
 }
-
-connectToDatabase();
 
 const userSchema = new Schema({
   name: {
