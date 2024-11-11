@@ -12,6 +12,27 @@ const app = express();
 const hostname = "localhost";
 const port = 8080;
 const fbiAPIKey = process.env.fbiAPIKey
+const { Schema } = mongoose;
+
+/* const locationORISchema = new Schema({
+  location: {
+    type: String,
+    required: true,
+  },
+  county: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  state: {
+    type: String,
+    required: true,
+  },
+  ori: {
+    type: String,
+    required: true,
+  }
+}); */
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -33,8 +54,21 @@ app.post('/api/search', (req, res) => {
   res.status(200).json({ message: 'Data stored successfully', data: lastSearch });
 });
 
-app.get('/api/fetch-info', async (req, res) => {
+app.get('/api/fbi/crime-stats', async (req, res) => {
+  const crime_types = [
+    "aggravated-assault",
+    "arson",
+    "burglary",
+    "larceny",
+    "motor-vehicle-theft",
+    "property-crime",
+    "violent-crime",
+    "homicide",
+    "rape",
+    "robbery",
+  ];
   try {
+    // Get info needed for API call
     let county = lastSearch.county;
     let state = lastSearch.state;
     let location = lastSearch.location;
@@ -43,9 +77,19 @@ app.get('/api/fetch-info', async (req, res) => {
     let year = "2023";
     let from_date = `01-${year}`;
     let to_date = `12-${year}`;
-    let url = `https://api.usa.gov/crime/fbi/cde/summarized/agency/${ori_code}/${crime_type}?year=${year}&from=${from_date}&to=${to_date}&API_KEY=${fbiAPIKey}`;
-    const response = await axios.get(url);
-    return res.json(response.data);
+
+    // Make a request for each type of crime and store it
+    const results = [];
+    for (let i = 0; i < crime_types.length; i ++) {
+      let crime_type = crime_types[i];
+      let url = `https://api.usa.gov/crime/fbi/cde/summarized/agency/${ori_code}/${crime_type}?year=${year}&from=${from_date}&to=${to_date}&API_KEY=${fbiAPIKey}`;
+      const response = await axios.get(url);
+      results.push({
+        crime_type,
+        data: response.data
+      });
+    }
+    return res.json(results);
   }
   catch (error) {
     console.error(error);
@@ -84,7 +128,6 @@ async function connectToDatabase() {
 
 connectToDatabase();
 
-const { Schema } = mongoose;
 const userSchema = new Schema({
   name: {
     type: String,
