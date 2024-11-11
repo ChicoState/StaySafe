@@ -6,9 +6,9 @@ function GoogleMap() {
   const GMAPS_API_KEY = globalThis.GMAPS_API_KEY ?? process.env.GMAPS_API_KEY;
   const [isHovered, setIsHovered] = useState(false);
   const [isAPILoaded, setIsAPILoaded] = useState(false);
-  const [mapCenter, setMapCenter] = useState(null); // Use only mapCenter
+  const [mapCenter, setMapCenter] = useState(null); // Default: no center initially
   const [error, setError] = useState(null); // Handle errors
-  const [zoom, setZoom] = useState(3); // Track zoom level for user-adjustable zoom
+  const [zoom, setZoom] = useState(3); // Default zoom level
 
   const containerStyle = {
     position: 'relative',
@@ -59,14 +59,17 @@ function GoogleMap() {
   // Auto-fetch user's location when the component mounts
   useEffect(() => {
     getUserLocation(); // Fetch location on component mount
-  }, []); // Empty dependency array means this effect runs once when the component mounts
+  }, []);
 
-  // Dynamically update map center if it changes
-  useEffect(() => {
-    if (mapCenter) {
-      console.log('Map center updated:', mapCenter);
-    }
-  }, [mapCenter]); // This effect runs when mapCenter changes
+  // Handle drag event to update map center after drag
+  const handleDragEnd = (event) => {
+    const newCenter = {
+      lat: event.latLng.lat(),
+      lng: event.latLng.lng(),
+    };
+    setMapCenter(newCenter); // Update the center with new lat, lng
+    console.log("New map center after drag:", newCenter);
+  };
 
   return (
     <APIProvider apiKey={GMAPS_API_KEY} libraries={['places']}>
@@ -96,27 +99,20 @@ function GoogleMap() {
         onMouseLeave={() => setIsHovered(false)}
       >
         <Map
+          key={mapCenter ? `${mapCenter.lat}-${mapCenter.lng}` : 'initial'} // Unique key based on center
           style={{
             width: '100%',
             height: '100%',
             borderRadius: '8px',
             border: '1px solid #ddd'
           }}
-          zoom={zoom} // Bind zoom to the zoom state
-          center={mapCenter || { lat: 22.54992, lng: 0 }} // Default center if mapCenter is not available
+          defaultZoom={zoom} // Use default zoom
+          defaultCenter={mapCenter ?? { lat: 22.54992, lng: 0 }} // Use default center if no user location
           gestureHandling={'greedy'}
-          onZoomChanged={(newZoom) => setZoom(newZoom)} // Update zoom level when the map zoom changes
-
-          // on drag end, update the map center
-          onDragEnd={(event) => {
-            const newCenter = event.center;
-            setMapCenter({ lat: newCenter.lat(), lng: newCenter.lng() });
+          onLoaded={({ map }) => {
+            console.log('Map loaded:', map);
           }}
-
-          // Optional: listen to resize events to ensure responsiveness
-          onResize={() => {
-            console.log("Map resized.");
-          }}
+          onDragEnd={handleDragEnd} // Listen for drag end and update the map center
         />
       </div>
     </APIProvider>
