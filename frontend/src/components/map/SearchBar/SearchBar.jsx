@@ -1,38 +1,47 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useMap } from '@vis.gl/react-google-maps';
 
-const SearchBar = ({ setMapCenter }) => { // Accept setMapCenter as a prop
+const SearchBar = ({ setMapCenter, searchValue, setSearchValue }) => { // Accept searchValue and setSearchValue as props
   const map = useMap();
-  const [searchValue, setSearchValue] = useState('');
+  const searchInputRef = useRef(null); // Create a reference for the input field
 
-  const initializeAutocomplete = (input) => {
-    if (!input || !window.google) return;
+  useEffect(() => {
+    const input = searchInputRef.current;
+    if (!input || !window.google) return; // Ensure Google Maps is loaded
 
+    // Initialize the Autocomplete API
     const autocomplete = new window.google.maps.places.Autocomplete(input, {
       types: ['geocode', 'establishment'],
       fields: ['formatted_address', 'geometry', 'name'],
     });
 
-    // When a place is selected
+    // Handle place selection
     autocomplete.addListener('place_changed', () => {
       const place = autocomplete.getPlace();
       if (!place.geometry) return;
 
-      // Center map on selected location
+      // Center the map on the selected location
       if (map) {
         map.panTo(place.geometry.location);
         map.setZoom(15);
       }
 
+      // Update search value and map center in the parent component
       setSearchValue(place.formatted_address);
-
-      // Update map center in the parent component
       setMapCenter({
         lat: place.geometry.location.lat(),
         lng: place.geometry.location.lng(),
       });
     });
-  };
+
+    // Cleanup listener on unmount
+    return () => {
+      if (autocomplete) {
+        window.google.maps.event.clearInstanceListeners(autocomplete);
+      }
+    };
+
+  }, [map, setMapCenter, setSearchValue]);
 
   return (
     <div className="search-container" style={{
@@ -45,11 +54,11 @@ const SearchBar = ({ setMapCenter }) => { // Accept setMapCenter as a prop
       maxWidth: '400px',
     }}>
       <input
+        ref={searchInputRef} // Use ref here to attach to the input element
         type="text"
         placeholder="Search for Address (Street, City, State)"
-        value={searchValue}
-        onChange={(e) => setSearchValue(e.target.value)}
-        ref={initializeAutocomplete}
+        value={searchValue} // Use the searchValue prop to control the input value
+        onChange={(e) => setSearchValue(e.target.value)} // Handle manual text changes
         style={{
           width: '100%',
           padding: '12px',

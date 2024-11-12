@@ -1,14 +1,15 @@
+import { useState, useEffect } from 'react';
 import { APIProvider, Map } from '@vis.gl/react-google-maps';
 import SearchBar from '../SearchBar/SearchBar';
-import { useState, useEffect } from 'react';
 
 function GoogleMap() {
   const GMAPS_API_KEY = globalThis.GMAPS_API_KEY ?? process.env.GMAPS_API_KEY;
   const [isHovered, setIsHovered] = useState(false);
   const [isAPILoaded, setIsAPILoaded] = useState(false);
-  const [mapCenter, setMapCenter] = useState(null); // Default: no center initially
-  const [error, setError] = useState(null); // Handle errors
-  const [zoom, setZoom] = useState(3); // Default zoom level
+  const [mapCenter, setMapCenter] = useState(null);
+  const [error, setError] = useState(null);
+  const [zoom, setZoom] = useState(3);
+  const [searchValue, setSearchValue] = useState(''); // Added searchValue state
 
   const containerStyle = {
     position: 'relative',
@@ -33,7 +34,7 @@ function GoogleMap() {
     return () => clearInterval(checkGoogleAPI);
   }, []);
 
-  // Function to get user's location
+  // Function to get user's location and update the search value
   const getUserLocation = () => {
     console.log("Getting user location...");
 
@@ -42,8 +43,20 @@ function GoogleMap() {
         (position) => {
           const { latitude, longitude } = position.coords;
           console.log("User location:", latitude, longitude);
+
+          // Reverse geocode to get the user's city or address
+          const geocoder = new window.google.maps.Geocoder();
+          const latLng = new window.google.maps.LatLng(latitude, longitude);
+          geocoder.geocode({ location: latLng }, (results, status) => {
+            if (status === 'OK' && results[0]) {
+              setSearchValue(results[0].formatted_address); // Update search input with the location address
+            } else {
+              setSearchValue("Location not found");
+            }
+          });
+
           setMapCenter({ lat: latitude, lng: longitude });
-          setZoom(15); // Set zoom to a closer view when user's location is found
+          setZoom(15);
         },
         (err) => {
           setError('Unable to retrieve your location.');
@@ -60,16 +73,6 @@ function GoogleMap() {
   useEffect(() => {
     getUserLocation(); // Fetch location on component mount
   }, []);
-
-  // Handle drag event to update map center after drag
-  const handleDragEnd = (event) => {
-    const newCenter = {
-      lat: event.latLng.lat(),
-      lng: event.latLng.lng(),
-    };
-    setMapCenter(newCenter); // Update the center with new lat, lng
-    console.log("New map center after drag:", newCenter);
-  };
 
   return (
     <APIProvider apiKey={GMAPS_API_KEY} libraries={['places']}>
@@ -89,7 +92,7 @@ function GoogleMap() {
           color: 'red',
           whiteSpace: 'nowrap'
         }}>Find Crime near you, StaySafe!</h2>
-        {isAPILoaded && <SearchBar setMapCenter={setMapCenter} />}
+        {isAPILoaded && <SearchBar setMapCenter={setMapCenter} searchValue={searchValue} setSearchValue={setSearchValue} />}
         <button onClick={getUserLocation}>Use My Location</button>
       </div>
 
@@ -99,20 +102,19 @@ function GoogleMap() {
         onMouseLeave={() => setIsHovered(false)}
       >
         <Map
-          key={mapCenter ? `${mapCenter.lat}-${mapCenter.lng}` : 'initial'} // Unique key based on center
+          key={mapCenter ? `${mapCenter.lat}-${mapCenter.lng}` : 'initial'}
           style={{
             width: '100%',
             height: '100%',
             borderRadius: '8px',
             border: '1px solid #ddd'
           }}
-          defaultZoom={zoom} // Use default zoom
-          defaultCenter={mapCenter ?? { lat: 22.54992, lng: 0 }} // Use default center if no user location
+          defaultZoom={zoom}
+          defaultCenter={mapCenter ?? { lat: 22.54992, lng: 0 }}
           gestureHandling={'greedy'}
           onLoaded={({ map }) => {
             console.log('Map loaded:', map);
           }}
-          onDragEnd={handleDragEnd} // Listen for drag end and update the map center
         />
       </div>
     </APIProvider>
