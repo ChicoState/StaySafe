@@ -29,7 +29,7 @@ ___
 
 #### Docker Troubleshooting
 
-If you run into issues with the Docker environment, try running `docker-clean.sh` or do it manually with the following:
+If you run into issues with the Docker environment, try running `docker-clean.sh` or use the following:
 
 ```bash
 docker rm staysafe_front
