@@ -7,13 +7,15 @@ import bodyParser from "body-parser";
 import bcrypt from "bcrypt";
 
 dotenv.config();
-connectToDatabase();
 
 const app = express();
 const hostname = "localhost";
 const port = 8080;
-const fbiAPIKey = process.env.fbiAPIKey
+const fbiAPIKey = process.env.FBI_API_KEY
 const { Schema } = mongoose;
+const dbName = "staysafe";
+
+connectToDatabase();
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -96,7 +98,6 @@ async function getOri(state, county, location) {
   }
 };
 
-const dbName = "staysafe";
 async function connectToDatabase() {
   try {
     await mongoose.connect(`mongodb+srv://${process.env.MONGO_INITDB_USERNAME}:${process.env.MONGO_INITDB_PASSWORD}@cluster0.bx6ne.mongodb.net/${dbName}`);
