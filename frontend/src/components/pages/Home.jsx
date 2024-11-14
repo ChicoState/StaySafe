@@ -1,4 +1,4 @@
-import GoogleMap from '../map/GoogleMap';
+import GoogleMap from '../map/GoogleMap/GoogleMap'
 import CrimeSection from '../crime/CrimeSection'
 
 const Home = () => {
