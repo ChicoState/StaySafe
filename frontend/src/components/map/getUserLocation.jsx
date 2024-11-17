@@ -61,7 +61,7 @@ export const getUserLocation = ({
     );
   } else {
     console.error("Geolocation not supported");
-
+    // Fallback to default location
     setSearchValue("Chico, CA");
     setMapCenter(defaultLocation);
     setZoom(defaultZoom);
