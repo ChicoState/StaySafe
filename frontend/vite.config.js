@@ -18,6 +18,7 @@ export default defineConfig(({ mode }) => {
     },
     define: {
       'process.env.GMAPS_API_KEY': JSON.stringify(GMAPS_API_KEY)
+      
     }
   };
 });
