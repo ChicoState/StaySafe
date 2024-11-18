@@ -5,8 +5,8 @@ import Home from './components/pages/Home';
 import About from './components/pages/About';
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
-import CrimeDetail from './components/crime/CrimeDetail';
-import ChicoArrests from './components/chico_arrests/ChicoArrests';
+
+
 
 function App() {
   return (
@@ -17,7 +17,10 @@ function App() {
           <Route path="about" element={<About />} />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
-          <Route path="crime/:id" element={<CrimeDetail />} />
+
+  
+
+          
         </Route>
       </Routes>
     </div>

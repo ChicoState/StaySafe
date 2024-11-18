@@ -19,6 +19,9 @@ services:
       - /usr/src/node_modules
     depends_on:
       - mongodb
+    #added here for chico arrest routing
+    command: node /usr/src/scraper.js 
+      
 
   mongodb:
     image: mongo:latest
@@ -30,6 +33,8 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: your_username
       MONGO_INITDB_ROOT_PASSWORD: your_password
+
+      
 
 volumes:
   mongodb_data:
