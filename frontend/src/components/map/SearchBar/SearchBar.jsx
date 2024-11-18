@@ -1,12 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
 import { useMap } from '@vis.gl/react-google-maps';
 import { getUserLocation } from "../getUserLocation";
+import axios from 'axios';
 
 const SearchBar = ({ setMapCenter, searchValue, setSearchValue, setZoom }) => {
   const map = useMap();
   const searchInputRef = useRef(null); // Reference for the input field
-
-  
 
   useEffect(() => {
     const input = searchInputRef.current;
@@ -14,8 +13,8 @@ const SearchBar = ({ setMapCenter, searchValue, setSearchValue, setZoom }) => {
 
     const autocomplete = new window.google.maps.places.Autocomplete(input, {
       types: ['geocode', 'establishment'],
-      fields: ['formatted_address', 'geometry', 'name'],
-    });
+      fields: ['formatted_address', 'geometry', 'name', 'address_components'],
+    });   
 
     autocomplete.addListener('place_changed', () => {
       const place = autocomplete.getPlace();
@@ -26,7 +25,26 @@ const SearchBar = ({ setMapCenter, searchValue, setSearchValue, setZoom }) => {
         map.setZoom(15);
       }
 
+      const addressComponents = place.address_components;
+      let location = '';
+      let state = '';
+      let county = '';
+  
+      addressComponents.forEach((component) => {
+        if (component.types.includes('locality')) {
+          location = component.long_name;
+        } 
+        else if (component.types.includes('administrative_area_level_1')) {
+          state = component.short_name;
+        } 
+        else if (component.types.includes('administrative_area_level_2')) {
+          county = component.long_name;
+        }
+      });
+
       setSearchValue(place.formatted_address);
+      postSearch(location, state, county)
+
       setMapCenter({
         lat: place.geometry.location.lat(),
         lng: place.geometry.location.lng(),
@@ -40,10 +58,29 @@ const SearchBar = ({ setMapCenter, searchValue, setSearchValue, setZoom }) => {
     };
   }, [map, setMapCenter, setSearchValue]);
 
+  const postSearch = async (location, state, county) => {
+    try {
+      const response = await axios.post('http://localhost:8080/api/search', {
+        location,
+        state,
+        county,
+      }, 
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      // Log or process the response data
+      console.log('Server response:', response.data);
+    } 
+    catch (error) {
+      console.error('Error posting data to backend:', error);
+    }
+  };
+
   return (
-    <div className="search-container" 
-      
-    >
+    <div className="search-container">
       <input
         ref={searchInputRef}
         type="text"
@@ -62,7 +99,7 @@ const SearchBar = ({ setMapCenter, searchValue, setSearchValue, setZoom }) => {
         }}
       />
       <button
-      // arrow function to call getUserLocation
+        // arrow function to call getUserLocation
         onClick={() => getUserLocation({ setSearchValue, setMapCenter, map, setZoom })}
         style={{
           backgroundColor: '#007BFF', // Blue button for attention

@@ -1,25 +1,103 @@
 import express from "express";
-const app = express();
-
-import cors from "cors";   // Package for handling CORS security
-import bodyParser from "body-parser"; // Middleware to parse incoming request bodies
+import cors from "cors";
+import axios from "axios";
+import mongoose from "mongoose";
+import dotenv from "dotenv"
+import bodyParser from "body-parser";
 import bcrypt from "bcrypt";
+
+dotenv.config();
+
+const app = express();
+const hostname = "localhost";
+const port = 8080;
+const fbiAPIKey = process.env.FBI_API_KEY
+const { Schema } = mongoose;
+const dbName = "staysafe";
+
+connectToDatabase();
+
 app.use(cors());
 app.use(bodyParser.json());
 
-import mongoose from "mongoose";
-import dotenv from 'dotenv';
-dotenv.config(); // Load environment variables from .env file
+// Temporary storage for search input
+let lastSearch = {};
 
 // Start up the localhost server by listening on localhost:8080
-const hostname = "localhost";
-const port = 8080;
 app.listen(port, () => {
   console.log(`Running at http://${hostname}:${port}/`);
 });
 
+app.post('/api/search', (req, res) => {
+  let { county, location, state } = req.body;
+  county = county.replace(/\s[Cc]ounty$/, '');
+  lastSearch = { county, location, state };
 
-const dbName = "staysafe";
+  console.log('Received data:', lastSearch);
+  res.status(200).json({ message: 'Data stored successfully', data: lastSearch });
+});
+
+app.get('/api/fbi/crime-stats', async (req, res) => {
+  const crime_types = [
+    "aggravated-assault",
+    "arson",
+    "burglary",
+    "larceny",
+    "motor-vehicle-theft",
+    "property-crime",
+    "violent-crime",
+    "homicide",
+    "rape",
+    "robbery",
+  ];
+  try {
+    // Get info needed for API call
+    let county = lastSearch.county;
+    let state = lastSearch.state;
+    let location = lastSearch.location;
+    let ori_code = await getOri(state, county, location);
+    let year = "2023";
+    let from_date = `01-${year}`;
+    let to_date = `12-${year}`;
+
+    // Make a request for each type of crime and store it
+    const results = [];
+    for (let i = 0; i < crime_types.length; i ++) {
+      let crime_type = crime_types[i];
+      let url = `https://api.usa.gov/crime/fbi/cde/summarized/agency/${ori_code}/${crime_type}?year=${year}&from=${from_date}&to=${to_date}&API_KEY=${fbiAPIKey}`;
+      const response = await axios.get(url);
+      results.push({
+        crime_type,
+        data: response.data
+      });
+    }
+    return res.json(results);
+  }
+  catch (error) {
+    console.error(error);
+  }
+});
+
+async function getOri(state, county, location) {
+  let url = `https://api.usa.gov/crime/fbi/cde/agency/byStateAbbr/${state}?API_KEY=${fbiAPIKey}`;
+  try {
+    const response = await axios.get(url);
+    const agencyData = response.data[county.toUpperCase()];
+    const agency = agencyData.find(agency =>
+      agency.state_abbr.toUpperCase() === state.toUpperCase() &&
+      agency.agency_name.toLowerCase().includes(location.toLowerCase()) &&
+      agency.agency_type_name === "City"
+    );
+
+    if (agency) {
+      return agency.ori;
+    }
+  }
+  catch (error) {
+    console.error(error);
+  }
+};
+
 async function connectToDatabase() {
   try {
     await mongoose.connect(`mongodb+srv://${process.env.MONGO_INITDB_USERNAME}:${process.env.MONGO_INITDB_PASSWORD}@cluster0.bx6ne.mongodb.net/${dbName}`);
@@ -29,9 +107,6 @@ async function connectToDatabase() {
   }
 }
 
-connectToDatabase();
-
-const { Schema } = mongoose;
 const userSchema = new Schema({
   name: {
     type: String,

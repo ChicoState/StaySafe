@@ -28,7 +28,7 @@ const CrimeList = ({ crimes }) => {
             onClick={() => navigate(`/crime/${crime.id}`)}
             style={{
               padding: '5px 10px',
-              backgroundColor: 'red',
+              backgroundColor: '#17c0ea',
               color: 'white',
               border: 'none',
               borderRadius: '4px',

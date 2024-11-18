@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { APIProvider, Map, useMap } from '@vis.gl/react-google-maps';
-import SearchBar from '../SearchBar/SearchBar';
+import SearchBar from '../SearchBar/SearchBar.jsx';
 import { getUserLocation } from "../getUserLocation";
 
 function GoogleMap() {
@@ -11,20 +11,6 @@ function GoogleMap() {
   const [error, setError] = useState(null);
   const [zoom, setZoom] = useState(3);
   const [searchValue, setSearchValue] = useState('');
-  
-
-  const containerStyle = {
-    position: 'relative',
-    width: '80%',
-    height: '80vh',
-    margin: '0 auto',
-    marginTop: 10,
-    backgroundColor: 'white',
-    border: '5px solid red',
-    transition: 'all 0.3s ease',
-    transform: isHovered ? 'scale(1.01)' : 'scale(1)',
-    boxShadow: isHovered ? '0 0 20px rgba(255,0,0,0.3)' : 'none'
-  };
 
   useEffect(() => {
     const checkGoogleAPI = setInterval(() => {
@@ -38,25 +24,19 @@ function GoogleMap() {
 
   return (
     <APIProvider apiKey={GMAPS_API_KEY} libraries={['places']}>
-      <div 
+      <div
 
-      style={{
-        // move it to center
-        display: 'flex',
-        justifyContent: 'space-evenly',
-        alignItems: 'space-between',
-        flexDirection: 'row',
-        padding: '20px 0',
-        // space between 
-      }}
+        style={{
+          // move it to center
+          display: 'flex',
+          justifyContent: 'space-evenly',
+          alignItems: 'space-between',
+          flexDirection: 'row',
+          padding: '20px 0',
+          // space between 
+        }}
 
       >
-        <h2 style={{
-          margin: 0,
-          fontSize: '24px',
-          color: 'red',
-          whiteSpace: 'nowrap'
-        }}>Find Crime near you, StaySafe!</h2>
         {isAPILoaded && (
           <SearchBar
             setMapCenter={setMapCenter}
@@ -67,7 +47,7 @@ function GoogleMap() {
         )}
       </div>
 
-      <MapComponent 
+      <MapComponent
         mapCenter={mapCenter}
         setMapCenter={setMapCenter}
         zoom={zoom}
@@ -81,9 +61,9 @@ function GoogleMap() {
   );
 }
 
-const MapComponent = ({ 
-  mapCenter, setMapCenter, zoom, setZoom, searchValue, setSearchValue, 
-  isHovered, setIsHovered 
+const MapComponent = ({
+  mapCenter, setMapCenter, zoom, setZoom, searchValue, setSearchValue,
+  isHovered, setIsHovered
 }) => {
   const map = useMap(); // Access map instance
 
@@ -94,29 +74,28 @@ const MapComponent = ({
     margin: '0 auto',
     marginTop: 10,
     backgroundColor: 'white',
-    border: '5px solid red',
+    border: '4px solid #767575',
+    borderRadius: '5px',
     transition: 'all 0.3s ease',
     transform: isHovered ? 'scale(1.01)' : 'scale(1)',
-    boxShadow: isHovered ? '0 0 20px rgba(255,0,0,0.3)' : 'none'
+    boxShadow: isHovered ? '0 0 20px rgba(81,231,255,0.3)' : 'none'
   };
 
-  
-
   // Auto-fetch user's location when the component mounts
- useEffect(() => {
+  useEffect(() => {
     if (map) {
-      getUserLocation({ 
-        setSearchValue, 
-        setMapCenter, 
-        setZoom, 
-        map, 
+      getUserLocation({
+        setSearchValue,
+        setMapCenter,
+        setZoom,
+        map,
       });
     }
   }, [map]);
 
   return (
     <div style={containerStyle} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
-     
+
       <Map
         style={{
           width: '100%',
