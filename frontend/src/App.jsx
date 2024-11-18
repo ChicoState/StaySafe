@@ -6,6 +6,7 @@ import About from './components/pages/About';
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 import CrimeDetail from './components/crime/CrimeDetail';
+import ChicoArrests from './components/chico_arrests/ChicoArrests';
 
 function App() {
   return (
