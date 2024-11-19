@@ -3,6 +3,7 @@ services:
   frontend:
     build: ./frontend
     container_name: staysafe_front
+    platform: linux/amd64
     ports:
       - '3000:3000'
     volumes:
@@ -12,6 +13,7 @@ services:
   backend:
     build: ./backend
     container_name: staysafe_back
+    platform: linux/amd64
     ports:
       - '8080:8080'
     volumes:
@@ -21,8 +23,9 @@ services:
       - mongodb
 
   mongodb:
-    image: mongo:latest
+    image: arm64v8/mongo:5.0
     container_name: staysafe_mongo
+    platform: linux/arm64/v8
     ports:
       - '27017:27017'
     volumes:
