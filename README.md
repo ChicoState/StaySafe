@@ -20,73 +20,49 @@ communities.
 * Node.js (JavaScript runtime)
 
 ## Environment Setup
-1. Install [Docker](https://www.docker.com/).
+1. Install Docker Desktop from the [Docker website](https://www.docker.com/) or the standalone Docker Compose from your package manager:
+    ```bash
+    # For Debian/Ubuntu and derivatives
+    sudo apt install docker-compose
+
+    # For Arch and derivatives
+    sudo pacman -S docker-compose
+
+    # For macOS with Homebrew
+    brew install docker-compose
+    ```
 
 2. Clone this repository and navigate to it:
     ```bash
-    git clone git@github.com:ChicoState/StaySafe.git && cd StaySafe
+    git clone git@github.com:ChicoState/StaySafe.git
+    cd StaySafe
     ```
 
-3. Build the Docker containers with no cache.
-    ```bash
-    docker compose build --no-cache
-    ```
-
-4. Start up the containers.
+3. Build and start the containers.
     ```bash
     docker compose up 
     ```
-5. You access the:
+
+4. Access the app via a web browser:
     * Frontend at http://localhost:3000/
     * Backend at http://localhost:8080/
 
-## Troubleshooting
-
-If you run into issues with the Docker environment, try in the following order:
-```bash
-docker rm staysafe_back && docker rm staysafe_front && docker rm staysafe_mongo
-```
-```bash
-docker compose build --no-cache
-```
-```bash
-<<<<<<< HEAD
-git clone git@github.com:ChicoState/StaySafe.git
-cd StaySafe
-```
-4. Build the Docker images:
-```bash
-docker-compose up
-```
-5. React frontend can be found at http://localhost:3000/
-6. Node backend data can be found at http://localhost:8080/
-___
-
-#### Docker Troubleshooting
+## Docker Troubleshooting
 
 If you run into issues with the Docker environment, try running `docker-clean.sh` or use the following:
 
 ```bash
-docker rm staysafe_front
-docker rm staysafe_back
-docker-compose build --no-cache
-docker-compose up
+docker rm staysafe_front staysafe_back staysafe_mongo
+docker compose build --no-cache
+docker compose up
 ```
 
 If the above doesn't resolve the issue, and the issue appears to be related to npm dependencies:
 
 ```bash
-rm backend/package-lock.json
-rm -r backend/node_modules
-rm frontend/package-lock.json
-rm -r frontend/node_modules
-docker rm staysafe_front
-docker rm staysafe_back
-docker-compose build --no-cache
-docker-compose up
-```
-
-=======
+rm backend/package-lock.json frontend/node_modules
+rm -r backend/node_modules frontend/node_modules
+docker rm staysafe_front staysafe_back staysafe_mongo
+docker compose build --no-cache
 docker compose up
 ```
->>>>>>> e4ece0ec77f8bb92c82f700d96480580305092c5
