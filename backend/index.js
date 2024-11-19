@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv"
 import bodyParser from "body-parser";
 import bcrypt from "bcrypt";
+import * as scraper from "./scraper.js"
 
 dotenv.config();
 
@@ -26,6 +27,19 @@ let lastSearch = {};
 // Start up the localhost server by listening on localhost:8080
 app.listen(port, () => {
   console.log(`Running at http://${hostname}:${port}/`);
+});
+
+app.get("/", (req, res) => {
+  res.send("Hello, StaySafe backend!")
+});
+
+app.get("/scrape-chico", async (req, res) => {
+  try {
+    const data = await scraper.getData();
+    res.json(data);
+  } catch (error) {
+    console.error('Error scraping Chico data:', error);
+  }
 });
 
 app.post('/api/search', (req, res) => {

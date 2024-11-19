@@ -1,22 +1,35 @@
+// Purpose: scrape the arrest records of Chico.
+import puppeteer from 'puppeteer';
 
-//this is for scraping data from chico arrests website
-//had to stimulate the action of clicking 'close' and then 'arrests' button since it was dyanmically updating the page (no URL change)
-// backend/scraper.js
+// NOTE: Helps us locate data in what page we are in visually in headless mode.
+// For Debugging: 
+// await page.screenshot({
+//     path: 'first.png',
+// });
 
+export async function scrapeData(page) {
+    const data = await page.$$eval('#gvArrests_ob_gvArrestsMainContainer .ob_gCc1', elements =>
+        elements.map(el => el.innerText.trim()).filter(text => text)
+    );
+    return data
+}
 
-// backend/scraper.js
-import express from 'express';
-import cors from 'cors';
+export async function getData() {
+    const browser = await puppeteer.launch({
+        headless: true,
+        defaultViewport: null,
+        executablePath: '/usr/bin/google-chrome',
+        args: ['--no-sandbox'],
+     });
+    const page = await browser.newPage();
+    await page.goto("https://chico.crimegraphics.com/2013/default.aspx");
 
-const app = express();
-app.use(cors()); // Enable CORS
+    await page.locator("#ArrestsMenu").click();
+    await page.waitForNavigation(),
+    await page.waitForSelector("#gvArrests_ob_gvArrestsMainContainer");
 
-// Simplified /scrape-chico route
-app.get('/scrape-chico', (req, res) => {
-  res.json({ message: 'Scrape Chico route is working!' });
-});
+    const data = await scrapeData(page);
+    await browser.close();
 
-// Start the Express server on port 8080
-app.listen(8080, () => {
-  console.log('Server running on http://localhost:8080');
-});
+    return data;
+}
