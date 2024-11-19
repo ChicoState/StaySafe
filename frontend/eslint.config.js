@@ -33,6 +33,8 @@ export default [
         'warn',
         { allowConstantExport: true },
       ],
+      "react/no-unescaped-entities": 0,
+      "complexity": ["error", { "max": 10, "variant": "classic"}],
     },
   },
 ]
