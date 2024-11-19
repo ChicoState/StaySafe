@@ -9,7 +9,7 @@ communities.
 ## Table of Contents
 * [Software Stack](#Software-Stack)
 * [Environment Setup](#Environment-Setup)
-* [Troubleshooting](#Troubleshooting)
+* [Environment Troubleshooting](#Environment-Troubleshooting)
 * [License](#License)
 
 ## Software Stack
@@ -47,9 +47,9 @@ communities.
     * Frontend at http://localhost:3000/
     * Backend at http://localhost:8080/
 
-## Docker Troubleshooting
+## Environment Troubleshooting
 
-If you run into issues with the Docker environment, try running `docker-clean.sh` or use the following:
+If you run into issues with the environment, try running `docker-clean.sh` or use the following:
 
 ```bash
 docker rm staysafe_front staysafe_back staysafe_mongo
