@@ -21,8 +21,7 @@ services:
       - /usr/src/node_modules
     depends_on:
       - mongodb
-    #added here for chico arrest routing
-    command: node /usr/src/scraper.js 
+
       
 
   mongodb:
@@ -41,3 +40,9 @@ services:
 
 volumes:
   mongodb_data:
+
+
+
+
+
+
