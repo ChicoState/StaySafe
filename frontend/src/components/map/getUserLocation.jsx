@@ -32,9 +32,20 @@ export const getUserLocation = ({
           setSearchValue(`Lat: ${latitude}, Lng: ${longitude}`);
         }
 
-        setMapCenter({ lat: latitude, lng: longitude });
+        const userLocation = { lat: latitude, lng: longitude };
+        setMapCenter(userLocation);
         setZoom(15);
-        if (map?.panTo) map.panTo({ lat: latitude, lng: longitude });
+
+        // Add a pin (marker) for the user's location
+        if (map) {
+          new google.maps.Marker({
+            position: userLocation,
+            map,
+            title: "You are here!", // Tooltip for the marker
+          });
+        }
+
+        if (map?.panTo) map.panTo(userLocation);
       },
       (err) => {
         switch (err.code) {
@@ -55,6 +66,16 @@ export const getUserLocation = ({
         setSearchValue("Chico, CA");
         setMapCenter(defaultLocation);
         setZoom(defaultZoom);
+
+        // Add a fallback marker for the default location
+        if (map) {
+          new google.maps.Marker({
+            position: defaultLocation,
+            map,
+            title: "Default Location: Chico, CA", // Tooltip for the marker
+          });
+        }
+
         if (map?.panTo) map.panTo(defaultLocation);
       },
       { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
@@ -65,6 +86,9 @@ export const getUserLocation = ({
     setSearchValue("Chico, CA");
     setMapCenter(defaultLocation);
     setZoom(defaultZoom);
+
+
+
     if (map?.panTo) map.panTo(defaultLocation);
   }
 };
