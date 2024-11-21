@@ -20,10 +20,20 @@ const SearchBar = ({ setMapCenter, searchValue, setSearchValue, setZoom }) => {
       const place = autocomplete.getPlace();
       if (!place.geometry) return;
 
-      if (map) {
-        map.panTo(place.geometry.location);
-        map.setZoom(15);
-      }
+
+      //this section add red pin to the address based on the search result
+  if (map) {
+    // Add a pin (marker) to the searched location
+    const marker = new google.maps.Marker({
+      position: place.geometry.location, // Searched location
+      map, // Google Map instance
+      title: place.formatted_address || "Search Result", // Tooltip
+    });
+
+    // Center the map on the searched location
+    map.panTo(place.geometry.location);
+    map.setZoom(15);
+  }
 
       const addressComponents = place.address_components;
       let location = '';
