@@ -1,0 +1,212 @@
+/* StatsPane specfic styling */
+.stats-pane-button {
+  background-color: #7439db; /* Blue button for attention */
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-left: 8px;
+  font-size: 16px;
+  transition: all 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.stats-pane-button:hover {
+  background-color: #552aa0; /* Darker shade on hover */
+}
+
+.stats-table h4 {
+  margin-bottom: 2rem;
+}
+
+#stats-table-spin-loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh; /* Ensure the container has a defined height */
+  width: 100%;  /* Optional, for full width */
+}
+
+.stats-table table {
+  margin-left: auto;
+  margin: auto;
+  border-collapse: collapse;
+}
+
+.stats-table tbody {
+  text-align: center;
+}
+
+.stats-table th {
+  width: 150px;
+  text-align: center;
+  border: none;
+  padding: 0.4rem;
+  padding-bottom: 0.4rem;
+  font-size: 110%;
+  color: #dfcece;
+  text-shadow: 2px 2px 2px black;
+}
+
+.stats-table td {
+  width: 150px;
+  text-align: center;
+  border: none;
+  padding: 0.4rem;
+}
+
+.stats-table
+tbody tr td:nth-child(2), /* Add border to 2nd column */
+tbody tr td:nth-child(3), /* Add border to 3rd column */
+tbody tr td:nth-child(4), /* Add border to 4th column */
+thead tr th:nth-child(2),
+thead tr th:nth-child(3),
+thead tr th:nth-child(4) {
+  border-left: 1.5px solid white; /* Only apply a left border */
+}
+
+.year-selection {
+  display: flex;
+}
+
+.year-selection h4 {
+  margin-top: 0.75rem;
+}
+
+/* Override margin for datepicker nav arrows */
+.date-picker button {
+  margin-top: .2rem;
+}
+
+.date-picker input {
+  width: 2.5rem;
+  padding: 0.3rem;
+  margin-left: 0.5rem;
+  text-align: center;
+}
+
+/* Adjustments from default react-sliding-pane css */
+.slide-pane {
+  display: flex;
+  flex-direction: column;
+  min-width: 100px;
+  height: 100%;
+  box-shadow: 0 8px 8px rgba(0, 0, 0, 0.5);
+  transition: transform 0.5s;
+  will-change: transform;
+  background: #242424;
+}
+
+.slide-pane:focus {
+  outline-style: none;
+}
+
+.slide-pane_from_right {
+  margin-left: auto;
+  transform: translateX(100%);
+}
+
+.slide-pane_from_right.content-after-open {
+  transform: translateX(0%);
+}
+
+.slide-pane_from_right.content-before-close {
+  transform: translateX(100%);
+}
+
+.slide-pane_from_left {
+  margin-right: auto;
+  transform: translateX(-100%);
+}
+
+.slide-pane_from_left.content-after-open {
+  transform: translateX(0%);
+}
+
+.slide-pane_from_left.content-before-close {
+  transform: translateX(-100%);
+}
+
+.slide-pane_from_bottom {
+  height: 90vh;
+  margin-top: 10vh;
+  transform: translateY(100%);
+}
+
+.slide-pane_from_bottom.content-after-open {
+  transform: translateY(0%);
+}
+
+.slide-pane_from_bottom.content-before-close {
+  transform: translateY(100%);
+}
+
+.slide-pane__overlay {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.slide-pane__overlay.overlay-after-open {
+  background-color: rgba(0, 0, 0, 0.3);
+  transition: background-color 0.5s;
+}
+
+.slide-pane__overlay.overlay-before-close {
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.slide-pane__header {
+  display: flex;
+  flex: 0 0 64px;
+  align-items: center;
+  background: #424646;
+  height: 64px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.slide-pane__title-wrapper {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  margin-left: 32px;
+  min-width: 0;
+}
+
+.slide-pane .slide-pane__title {
+  font-size: 22px;
+  font-weight: bold;
+  max-width: 80%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0;
+  padding: 0;
+  color: #17c0ea;
+}
+
+.slide-pane__close {
+  margin-left: 24px;
+  padding: 16px;
+  opacity: 0.7;
+  cursor: pointer;
+}
+
+.slide-pane__close svg {
+  width: 12px;
+  padding: 0;
+}
+
+.slide-pane__content {
+  position: relative;
+  overflow-y: auto;
+  padding: 24px 32px;
+  flex: 1 1 auto;
+}
+
+.slide-pane__subtitle {
+  font-size: 14px;
+}
