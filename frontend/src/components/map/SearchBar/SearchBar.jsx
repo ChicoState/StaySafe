@@ -1,11 +1,15 @@
-import { useState, useEffect, useRef } from 'react';
+import { useMemo, useEffect, useRef, useState } from 'react';
 import { useMap } from '@vis.gl/react-google-maps';
 import { getUserLocation } from "../getUserLocation";
 import axios from 'axios';
+import StatsPane from '../../stats-pane/StatsPane';
 
 const SearchBar = ({ setMapCenter, searchValue, setSearchValue, setZoom }) => {
   const map = useMap();
   const searchInputRef = useRef(null); // Reference for the input field
+  const [location, setLocation] = useState("Chico");
+  const [state, setState] = useState("CA");
+  const [county, setCounty] = useState("Butte");
 
   useEffect(() => {
     const input = searchInputRef.current;
@@ -36,24 +40,25 @@ const SearchBar = ({ setMapCenter, searchValue, setSearchValue, setZoom }) => {
   }
 
       const addressComponents = place.address_components;
-      let location = '';
-      let state = '';
-      let county = '';
+
   
       addressComponents.forEach((component) => {
         if (component.types.includes('locality')) {
-          location = component.long_name;
+          let updatedLoc = component.long_name;
+          setLocation(updatedLoc);
         } 
         else if (component.types.includes('administrative_area_level_1')) {
-          state = component.short_name;
+          let updatedState = component.short_name;
+          setState(updatedState);
         } 
         else if (component.types.includes('administrative_area_level_2')) {
-          county = component.long_name;
+          let updatedCounty = component.long_name;
+          updatedCounty = updatedCounty.replace(/\s[Cc]ounty$/, ''); // Remove 'County' from string
+          setCounty(updatedCounty);
         }
       });
 
       setSearchValue(place.formatted_address);
-      postSearch(location, state, county)
 
       setMapCenter({
         lat: place.geometry.location.lat(),
@@ -66,14 +71,15 @@ const SearchBar = ({ setMapCenter, searchValue, setSearchValue, setZoom }) => {
         window.google.maps.event.clearInstanceListeners(autocomplete);
       }
     };
-  }, [map, setMapCenter, setSearchValue]);
+  }, [map, setMapCenter, setSearchValue, state, county, location]);
 
-  const postSearch = async (location, state, county) => {
+  const postSearch = async (location, state, county, year) => {
     try {
       const response = await axios.post('http://localhost:8080/api/search', {
         location,
         state,
         county,
+        year,
       }, 
       {
         headers: {
@@ -129,6 +135,11 @@ const SearchBar = ({ setMapCenter, searchValue, setSearchValue, setZoom }) => {
         <i className="fas fa-location-arrow" style={{ marginRight: '8px' }}></i> {/* FontAwesome icon */}
         Find Me
       </button>
+      <StatsPane 
+        location={location}
+        state={state}
+        county={county}
+      />
     </div>
   );
 };

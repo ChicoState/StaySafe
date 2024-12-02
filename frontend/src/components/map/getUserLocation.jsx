@@ -78,7 +78,7 @@ export const getUserLocation = ({
 
         if (map?.panTo) map.panTo(defaultLocation);
       },
-      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+      { enableHighAccuracy: true, timeout: 50000, maximumAge: 0 }
     );
   } else {
     console.error("Geolocation not supported");

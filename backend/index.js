@@ -28,15 +28,7 @@ app.listen(port, () => {
   console.log(`Running at http://${hostname}:${port}/`);
 });
 
-app.post('/api/search', (req, res) => {
-  let { county, location, state } = req.body;
-  county = county.replace(/\s[Cc]ounty$/, '');
-  lastSearch = { county, location, state };
-
-  console.log('Received data:', lastSearch);
-  res.status(200).json({ message: 'Data stored successfully', data: lastSearch });
-});
-
+/* FBI API Functionality */
 app.get('/api/fbi/crime-stats', async (req, res) => {
   const crime_types = [
     "aggravated-assault",
@@ -50,54 +42,112 @@ app.get('/api/fbi/crime-stats', async (req, res) => {
     "rape",
     "robbery",
   ];
+  // Make a request for each type of crime and store it
+  const results = [];
+
   try {
-    // Get info needed for API call
-    let county = lastSearch.county;
-    let state = lastSearch.state;
-    let location = lastSearch.location;
-    let ori_code = await getOri(state, county, location);
-    let year = "2023";
+    // Get info needed for API call from url params
+    const { location, state, county, year, filter } = req.query;
+    const ori_results = await getOri(state, county, location);
+    const ori_code = ori_results.ori;
+    const loc_found = ori_results.loc_found;
     let from_date = `01-${year}`;
     let to_date = `12-${year}`;
 
-    // Make a request for each type of crime and store it
-    const results = [];
-    for (let i = 0; i < crime_types.length; i ++) {
+    for (let i = 0; i < crime_types.length; i++) {
       let crime_type = crime_types[i];
       let url = `https://api.usa.gov/crime/fbi/cde/summarized/agency/${ori_code}/${crime_type}?year=${year}&from=${from_date}&to=${to_date}&API_KEY=${fbiAPIKey}`;
       const response = await axios.get(url);
       results.push({
+        location,
+        state,
+        county,
+        year,
         crime_type,
-        data: response.data
+        loc_found,
+        data: response.data,
       });
+    }
+    if (filter === "rates") {
+      const filtered_results = await getRates(results);
+      return res.json(filtered_results);
     }
     return res.json(results);
   }
   catch (error) {
     console.error(error);
+    return res.status(500).json({ error: "Internal server error" });
   }
 });
 
 async function getOri(state, county, location) {
   let url = `https://api.usa.gov/crime/fbi/cde/agency/byStateAbbr/${state}?API_KEY=${fbiAPIKey}`;
+  let loc_found = true;
   try {
     const response = await axios.get(url);
     const agencyData = response.data[county.toUpperCase()];
-    const agency = agencyData.find(agency =>
+    let agency = agencyData.find(agency =>
       agency.state_abbr.toUpperCase() === state.toUpperCase() &&
       agency.agency_name.toLowerCase().includes(location.toLowerCase()) &&
-      agency.agency_type_name === "City"
+      agency.agency_type_name === "City" 
     );
+    // Fall back to county data if city not found
+    if (!agency) {
+      console.log("City lookup failed, falling back to county data...")
+      agency = agencyData.find(agency =>
+        agency.state_abbr.toUpperCase() === state.toUpperCase() &&
+        agency.agency_type_name === "County"
+      );
+      loc_found = false;
+    }
 
     if (agency) {
-      return agency.ori;
+      return {
+        ori: agency.ori,
+        loc_found: loc_found,
+      }
     }
   }
   catch (error) {
     console.error(error);
   }
+  // If no results found
+  return { ori: null, found: false };
 };
 
+async function getRates(crime_data) {
+  let url = "http://localhost:8080/api/fbi/crime-stats";
+
+  try {
+
+    const filteredData = crime_data.map(crime => {
+      const rates = crime?.data?.offenses?.rates || {};
+
+      // Filter rates, excluding clearances (resovled cases)
+      const filteredRates = Object.fromEntries(
+        Object.entries(rates).filter(([key]) => !key.includes("Clearances"))
+      );
+
+      return {
+        crime_type: crime.crime_type,
+        location: crime.location,
+        state: crime.state,
+        county: crime.county,
+        year: crime.year,
+        loc_found: crime.loc_found,
+        rates: filteredRates,
+      };
+    });
+    return filteredData;
+  } 
+  catch (error) {
+    console.error("Error fetching or processing crime data:", error);
+    return [];
+  }
+}
+
+
+/* Database functionality */
 async function connectToDatabase() {
   try {
     await mongoose.connect(`mongodb+srv://${process.env.MONGO_INITDB_USERNAME}:${process.env.MONGO_INITDB_PASSWORD}@cluster0.bx6ne.mongodb.net/${dbName}`);
@@ -107,6 +157,7 @@ async function connectToDatabase() {
   }
 }
 
+/* User creation & handling functionality */
 const userSchema = new Schema({
   name: {
     type: String,
@@ -125,8 +176,8 @@ const userSchema = new Schema({
 
 // NOTE: Mongoose automatically looks for the plural, lowercased version of 
 // your collectionName variable.
-const collectionName = "users"; 
-const userModel = mongoose.model(collectionName, userSchema) 
+const collectionName = "users";
+const userModel = mongoose.model(collectionName, userSchema)
 
 
 async function doesEmailExist(email) {
@@ -157,8 +208,8 @@ app.post('/register', async (req, res) => {
     }
 
     const hashedPassword = await hashPassword(password);
-    await userModel.create({ name: name, email: email, password: hashedPassword});
-    
+    await userModel.create({ name: name, email: email, password: hashedPassword });
+
     res.status(201).json({ success: true, message: "User registered successfully!" });
   } catch (error) {
     console.error("Error registering user:", error);
