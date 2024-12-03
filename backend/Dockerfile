@@ -39,6 +39,9 @@ RUN apt-get update && apt-get install -y \
 # Copy current directory items over
 COPY . .
 
+RUN npm uninstall bcrypt
+RUN npm install bcrypt
+
 EXPOSE 8080
 
 # Run index.js
