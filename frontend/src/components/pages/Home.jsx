@@ -1,11 +1,14 @@
+
+
 import GoogleMap from '../map/GoogleMap/GoogleMap'
-import CrimeSection from '../crime/CrimeSection'
+// importing chico arrest section.
+import ChicoArrests from '../chico_arrests/ChicoArrests'
 
 const Home = () => {
   return (
     <>
       <GoogleMap />
-      <CrimeSection />
+      <ChicoArrests />
     </>
   );
 };
