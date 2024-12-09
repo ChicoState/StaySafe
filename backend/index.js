@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv"
 import bodyParser from "body-parser";
 import bcrypt from "bcrypt";
+import * as scraper from "./scraper.js"
 
 dotenv.config();
 
@@ -28,7 +29,28 @@ app.listen(port, () => {
   console.log(`Running at http://${hostname}:${port}/`);
 });
 
-/* FBI API Functionality */
+app.get("/", (req, res) => {
+  res.send("Hello, StaySafe backend!")
+});
+
+app.get("/scrape-chico", async (req, res) => {
+  try {
+    const data = await scraper.getData();
+    res.json(data);
+  } catch (error) {
+    console.error('Error scraping Chico data:', error);
+  }
+});
+
+app.post('/api/search', (req, res) => {
+  let { county, location, state } = req.body;
+  county = county.replace(/\s[Cc]ounty$/, '');
+  lastSearch = { county, location, state };
+
+  console.log('Received data:', lastSearch);
+  res.status(200).json({ message: 'Data stored successfully', data: lastSearch });
+});
+
 app.get('/api/fbi/crime-stats', async (req, res) => {
   const crime_types = [
     "aggravated-assault",
