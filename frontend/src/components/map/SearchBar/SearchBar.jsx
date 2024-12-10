@@ -1,4 +1,4 @@
-import { useMemo, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useMap } from '@vis.gl/react-google-maps';
 import { getUserLocation } from "../getUserLocation";
 import axios from 'axios';
@@ -72,28 +72,6 @@ const SearchBar = ({ setMapCenter, searchValue, setSearchValue, setZoom }) => {
       }
     };
   }, [map, setMapCenter, setSearchValue, state, county, location]);
-
-  const postSearch = async (location, state, county, year) => {
-    try {
-      const response = await axios.post('http://localhost:8080/api/search', {
-        location,
-        state,
-        county,
-        year,
-      }, 
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-  
-      // Log or process the response data
-      console.log('Server response:', response.data);
-    } 
-    catch (error) {
-      console.error('Error posting data to backend:', error);
-    }
-  };
 
   return (
     <div className="search-container">
