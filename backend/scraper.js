@@ -9,7 +9,11 @@ export async function scrapeData(page) {
                 const text = el.innerText.trim(); // Get text and trim whitespace
                 if (text && !text.startsWith("Inc #")) {
                     // Normalize address: Add ", Chico" if not already present
-                    return text.endsWith(", Chico") ? text : `${text}, Chico`;
+                    const normalizedText = text.toLowerCase(); // Convert to lowercase for comparison
+                    if (!normalizedText.endsWith(", chico")) {
+                        return `${text}, Chico`; // Append ", Chico" if not already present
+                    }
+                    return text; // If already ends with ", Chico" (case-insensitive), return as is
                 }
                 return null; // Exclude unwanted entries like "Inc #"
             })
@@ -17,6 +21,7 @@ export async function scrapeData(page) {
     );
     return data;
 }
+
 
 
 // Function to perform geocoding on the addresses
