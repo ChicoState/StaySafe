@@ -38,6 +38,13 @@ async function geocodeAddress(address) {
         if (response.data.status === "OK") {
             const result = response.data.results[0];
             const location = result.geometry.location;
+            const formattedAddress = result.formatted_address;
+            
+            if (formattedAddress === "Chico, CA, USA") {
+                console.error(`Skipping vague address: ${address}`);
+                // mark the address as null to filter it out later
+                return null;
+            }
             return {
                 address: result.formatted_address,
                 latitude: location.lat,
@@ -85,6 +92,11 @@ export async function getData() {
             const geocodedData = await Promise.all(
                 addresses.map(async (address) => {
                     const geocodeResult = await geocodeAddress(address);
+                    // check if the result is null (skipped address)
+                    if (geocodeResult === null) {
+                        console.log(`Skipping address: ${address}`);
+                        return null;
+                    }
                     if (geocodeResult) {
                         return {
                             originalAddress: address,
