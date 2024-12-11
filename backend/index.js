@@ -21,9 +21,6 @@ connectToDatabase();
 app.use(cors());
 app.use(bodyParser.json());
 
-// Temporary storage for search input
-let lastSearch = {};
-
 // Start up the localhost server by listening on localhost:8080
 app.listen(port, () => {
   console.log(`Running at http://${hostname}:${port}/`);
@@ -33,6 +30,7 @@ app.get("/", (req, res) => {
   res.send("Hello, StaySafe backend!")
 });
 
+/* Get results from Chico arrest scraper */
 app.get("/scrape-chico", async (req, res) => {
   try {
     const data = await scraper.getData();
@@ -42,15 +40,7 @@ app.get("/scrape-chico", async (req, res) => {
   }
 });
 
-app.post('/api/search', (req, res) => {
-  let { county, location, state } = req.body;
-  county = county.replace(/\s[Cc]ounty$/, '');
-  lastSearch = { county, location, state };
-
-  console.log('Received data:', lastSearch);
-  res.status(200).json({ message: 'Data stored successfully', data: lastSearch });
-});
-
+/* FBI API functionality */
 app.get('/api/fbi/crime-stats', async (req, res) => {
   const crime_types = [
     "aggravated-assault",
@@ -102,10 +92,33 @@ app.get('/api/fbi/crime-stats', async (req, res) => {
   }
 });
 
+// Model for storing ORI codes
+const oriSchema = new Schema({
+  ori: { type: String, required: true, unique: true },
+  state: { type: String, required: true },
+  county: { type: String, required: true },
+  location: { type: String, required: true },
+  loc_found: { type: Boolean, required: true },
+});
+
+const oriModel = mongoose.model("ori_codes", oriSchema);
+
+// Gets ORI from database or FBI API
 async function getOri(state, county, location) {
   let url = `https://api.usa.gov/crime/fbi/cde/agency/byStateAbbr/${state}?API_KEY=${fbiAPIKey}`;
   let loc_found = true;
+
   try {
+    // Check if ORI code is in the database
+    const existingORI = await oriModel.findOne({ state, county, location });
+    if (existingORI) {
+      console.log("ORI code found in database:", existingORI.ori);
+      return {
+        ori: existingORI.ori,
+        loc_found: existingORI.loc_found
+      };
+    }
+    // Fetch ORI from API if not in database
     const response = await axios.get(url);
     const agencyData = response.data[county.toUpperCase()];
     let agency = agencyData.find(agency =>
@@ -124,8 +137,19 @@ async function getOri(state, county, location) {
     }
 
     if (agency) {
+      const ori = agency.ori;
+
+      // Save ORI to database
+      await oriModel.create({
+        ori,
+        state,
+        county,
+        location,
+        loc_found,
+      });
+
       return {
-        ori: agency.ori,
+        ori: ori,
         loc_found: loc_found,
       }
     }
@@ -137,6 +161,7 @@ async function getOri(state, county, location) {
   return { ori: null, found: false };
 };
 
+// Filter for rates only
 async function getRates(crime_data) {
   let url = "http://localhost:8080/api/fbi/crime-stats";
 
@@ -168,8 +193,7 @@ async function getRates(crime_data) {
   }
 }
 
-
-/* Database functionality */
+/* Database connection function */
 async function connectToDatabase() {
   try {
     await mongoose.connect(`mongodb+srv://${process.env.MONGO_INITDB_USERNAME}:${process.env.MONGO_INITDB_PASSWORD}@cluster0.bx6ne.mongodb.net/${dbName}`);
