@@ -149,6 +149,7 @@ const MapComponent = ({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
+      {
       
       loading ?  
       <div
@@ -191,6 +192,7 @@ const MapComponent = ({
           }
         }}
       />
+      }
     </div>
   );
 };
