@@ -10,6 +10,7 @@ const SearchBar = ({ setMapCenter, searchValue, setSearchValue, setZoom }) => {
   const [location, setLocation] = useState("Chico");
   const [state, setState] = useState("CA");
   const [county, setCounty] = useState("Butte");
+  const [showMessage, setShowMessage] = useState(false);
 
   useEffect(() => {
     const input = searchInputRef.current;
@@ -59,6 +60,12 @@ const SearchBar = ({ setMapCenter, searchValue, setSearchValue, setZoom }) => {
       });
 
       setSearchValue(place.formatted_address);
+      // checks if the search value is contians Chico, CA, if not show a pop up message to the user
+      if (!place.formatted_address.includes("Chico, CA")) {
+        // dont use alert, it will block the UI
+        setShowMessage(true);
+        setTimeout(() => setShowMessage(false), 5000); // Hide after 3 seconds
+      }
 
       setMapCenter({
         lat: place.geometry.location.lat(),
@@ -96,6 +103,11 @@ const SearchBar = ({ setMapCenter, searchValue, setSearchValue, setZoom }) => {
   };
 
   return (
+    // Search bar container
+
+
+
+
     <div className="search-container">
       <input
         ref={searchInputRef}
@@ -114,6 +126,25 @@ const SearchBar = ({ setMapCenter, searchValue, setSearchValue, setZoom }) => {
           outline: 'none',
         }}
       />
+
+{showMessage && (
+      <div style={{
+        position: 'absolute',
+        top: '7px',
+        right: '20%',
+        transform: 'translateX(-50%)',
+        backgroundColor: 'rgba(255, 69, 0, 0.9)',
+        color: 'white',
+        padding: '10px 20px',
+        borderRadius: '8px',
+        fontSize: '12px',
+        zIndex: '1000',
+
+
+      }}>
+        No street-level data available for this location. Please try another address or check status.
+      </div>
+    )}
       <button
         // arrow function to call getUserLocation
         onClick={() => getUserLocation({ setSearchValue, setMapCenter, map, setZoom })}
