@@ -1,3 +1,4 @@
+![staysafelogo](https://github.com/user-attachments/assets/8aae5d57-9e64-4da1-b26e-49a3cd94e42f)
 # StaySafe
 Our mission is to enhance personal and community safety by providing comprehensive
 insights and data analysis. We aim to support businesses in identifying optimal locations for
