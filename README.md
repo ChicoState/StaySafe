@@ -1,4 +1,5 @@
 # StaySafe
+![staysafelogo](logo.svg)
 Our mission is to enhance personal and community safety by providing comprehensive
 insights and data analysis. We aim to support businesses in identifying optimal locations for
 hosting their operations, assist travelers in selecting the safest and most suitable
