@@ -1,4 +1,6 @@
-# StaySafe
+<p align="center"><img src="https://github.com/ChicoState/StaySafe/blob/main/logo.svg" width="400" alt="StaySafe Logo"></p>
+
+## About StaySafe
 Our mission is to enhance personal and community safety by providing comprehensive
 insights and data analysis. We aim to support businesses in identifying optimal locations for
 hosting their operations, assist travelers in selecting the safest and most suitable
