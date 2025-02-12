@@ -1,0 +1,8 @@
+{"_id":{"$oid":"6758aac6bbfb57fc54c8ecb9"},"ori":"CA0040200","state":"CA","county":"Butte","location":"Chico","loc_found":true,"__v":0}
+{"_id":{"$oid":"6758ab3b198ace535e7acdd0"},"ori":"WASPD0000","state":"WA","county":"King","location":"Seattle","loc_found":true,"__v":0}
+{"_id":{"$oid":"6758ab5d198ace535e7acdd3"},"ori":"CA0340400","state":"CA","county":"Sacramento","location":"Sacramento","loc_found":true,"__v":0}
+{"_id":{"$oid":"6758ab6c198ace535e7acdd6"},"ori":"CA0040000","state":"CA","county":"Butte","location":"Magalia","loc_found":false,"__v":0}
+{"_id":{"$oid":"6758ac7ef3a73b656e307734"},"ori":"OK0550000","state":"OK","county":"Oklahoma","location":"Oklahoma City","loc_found":false,"__v":0}
+{"_id":{"$oid":"6758b00386780dcbcfbcc2f8"},"ori":"CA0194200","state":"CA","county":"Los Angeles","location":"Los Angeles","loc_found":true,"__v":0}
+{"_id":{"$oid":"6759f1183c68ecc606b83d49"},"ori":"CA0510000","state":"CA","county":"Sutter","location":"Live Oak","loc_found":false,"__v":0}
+{"_id":{"$oid":"67625e0a6449aaa4ecb8e99d"},"ori":"CA0510200","state":"CA","county":"Sutter","location":"Yuba City","loc_found":true,"__v":0}
